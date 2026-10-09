@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.reef-data/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+coverage/
+playwright-report/
+test-results/
+demo/workspace/

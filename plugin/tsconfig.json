@@ -1,0 +1,5 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": { "types": ["node"] },
+  "include": ["./*.ts", "./*.tsx", "../src/core", "../src/ui/Aquarium.tsx"]
+}

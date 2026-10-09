@@ -1,0 +1,45 @@
+{
+  "name": "reef-agent-aquarium",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A pixel-art aquarium for real Codex activity, recording, and replay.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n server,web \"npm:server\" \"npm:web\"",
+    "server": "tsx server/index.ts",
+    "web": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "start": "tsx server/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "demo:reset": "node demo/reset.mjs",
+    "plugin:build": "tsc --project plugin/tsconfig.json && node scripts/plugin-build.mjs",
+    "plugin:serve": "node plugin/dist/server.mjs",
+    "plugin:test": "node scripts/plugin-test.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/ext-apps": "^1.7.5",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "@openai/codex-sdk": "^0.162.0",
+    "@openai/mcp-extensions": "^0.1.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "concurrently": "^10.0.6",
+    "esbuild": "^0.28.2",
+    "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4"
+  }
+}

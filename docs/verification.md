@@ -8,6 +8,7 @@ Verified locally on 9 October 2026, Asia/Singapore, with Node.js 22.23.2 on macO
 - The public `garden-rescue.reef` is this real run with home/project paths sanitized. It retains actual timings, outputs, statuses, and reported usage. The built-in DEMO is a separate synthetic fixture.
 - **15:00:** A second coding run launched through the browser using isolated inherited integrations. The aquarium received 28 events and ended completed with three failed commands, one reported file change, and a passing two-test rerun. This caught an inaccurate demo preset, subsequently corrected to the exact fixture files and test command.
 - Launch-error UI was observed on a real failed configuration attempt. The adapter issue was fixed and verified with a successful real model smoke run before the second coding run.
+- **15:27:** A separate real SDK run enabled only the installed Reef MCP server and streamed nine events through `SessionManager`. It observed `reef_aquarium` in progress and completed, merged the lifecycle into one tool item, and ended with `turn.completed`. The persisted recording exactly matched the live recording; final replay state matched the live reducer. No shell commands ran. [Sanitized recording](live-mcp-evidence.reef) preserves actual timings and events with local paths replaced. Reproduce with `npx tsx scripts/live-mcp-test.ts` after installing Reef; this is an account-backed manual check, not part of CI.
 
 ## Automated checks
 
@@ -39,6 +40,7 @@ Actual desktop file-viewer and conversation-panel rendering remains **unverified
 | --- | --- |
 | Commands, failures, file changes, messages, completion, usage | Real Reef-launched coding runs, including browser observation and durable replay |
 | Installed plugin discovery and MCP invocation | Fresh real Codex CLI turn; successful `reef_aquarium` start/completion |
+| Live MCP recording and replay | Real Codex SDK stream through SessionManager; nine events and exact disk/replay equality |
 | Import, rewind, privacy-default export | Standalone browser exercised with the real recording |
 | Plugin file input, session selection, selected context | Official AppBridge harness; actual host UI still unverified |
 | Cancellation, restart, SSE reconnection | Automated integration tests; no additional account-backed run claimed |

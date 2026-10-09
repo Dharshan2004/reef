@@ -1,0 +1,147 @@
+{
+  "format": "reef",
+  "version": 1,
+  "session": {
+    "id": "1d0c650a-ffa3-4f19-9533-b9be39d6341e",
+    "title": "Actual Reef MCP activity proof",
+    "prompt": "Use @reef. This is a read-only plugin activation test. Discover the installed Reef plugin MCP tool if tool discovery is necessary, then call reef_aquarium exactly once. Do not use shell, filesystem, browser, or any other application tool. Report its tool name and whether it succeeded. If Reef is unavailable, state that and stop.",
+    "workingDirectory": "/demo/reef",
+    "model": "gpt-6.1-sol",
+    "createdAt": "2026-10-09T07:27:37.121Z",
+    "source": "live"
+  },
+  "events": [
+    {
+      "id": "aa981722-9486-43b6-a278-42233c1da106",
+      "sessionId": "1d0c650a-ffa3-4f19-9533-b9be39d6341e",
+      "seq": 1,
+      "at": "2026-10-09T07:27:37.122Z",
+      "type": "session.started",
+      "data": {}
+    },
+    {
+      "id": "025124d3-d388-4ee6-a99a-595cffbf930b",
+      "sessionId": "1d0c650a-ffa3-4f19-9533-b9be39d6341e",
+      "seq": 2,
+      "at": "2026-10-09T07:27:38.363Z",
+      "type": "thread.started",
+      "data": {
+        "thread_id": "01a11f8f-731b-7443-914d-dc1cda40081f"
+      }
+    },
+    {
+      "id": "b0c4478b-0dc1-4ead-ac94-eda17afdf718",
+      "sessionId": "1d0c650a-ffa3-4f19-9533-b9be39d6341e",
+      "seq": 3,
+      "at": "2026-10-09T07:27:38.373Z",
+      "type": "item.completed",
+      "data": {
+        "item": {
+          "id": "item_0",
+          "type": "error",
+          "message": "Under-development features enabled: chronicle. Under-development features are incomplete and may behave unpredictably. To suppress this warning, set `suppress_unstable_features_warning = true` in /home/demo/.codex/config.toml."
+        }
+      }
+    },
+    {
+      "id": "9f791585-0b10-424c-9ab7-bcf1dc31f2e1",
+      "sessionId": "1d0c650a-ffa3-4f19-9533-b9be39d6341e",
+      "seq": 4,
+      "at": "2026-10-09T07:27:38.499Z",
+      "type": "turn.started",
+      "data": {}
+    },
+    {
+      "id": "d13aed8c-772e-47b7-b72c-a28fa922973f",
+      "sessionId": "1d0c650a-ffa3-4f19-9533-b9be39d6341e",
+      "seq": 5,
+      "at": "2026-10-09T07:27:45.704Z",
+      "type": "item.completed",
+      "data": {
+        "item": {
+          "id": "item_1",
+          "type": "agent_message",
+          "text": "I’ll check for the Reef MCP tool and call `reef_aquarium` once if available.\n"
+        }
+      }
+    },
+    {
+      "id": "15d8f967-24dd-46cc-a45e-bccb5eea0098",
+      "sessionId": "1d0c650a-ffa3-4f19-9533-b9be39d6341e",
+      "seq": 6,
+      "at": "2026-10-09T07:27:51.280Z",
+      "type": "item.started",
+      "data": {
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "reef",
+          "tool": "reef_aquarium",
+          "arguments": {},
+          "result": null,
+          "error": null,
+          "status": "in_progress"
+        }
+      }
+    },
+    {
+      "id": "7c3ca381-f93c-4423-bd59-8af27b8cb8e0",
+      "sessionId": "1d0c650a-ffa3-4f19-9533-b9be39d6341e",
+      "seq": 7,
+      "at": "2026-10-09T07:27:51.285Z",
+      "type": "item.completed",
+      "data": {
+        "item": {
+          "id": "item_2",
+          "type": "mcp_tool_call",
+          "server": "reef",
+          "tool": "reef_aquarium",
+          "arguments": {},
+          "result": {
+            "content": [
+              {
+                "type": "text",
+                "text": "Reef shows recorded Codex activity. Choose a session or open a .reef recording."
+              }
+            ],
+            "structured_content": {
+              "view": "panel"
+            }
+          },
+          "error": null,
+          "status": "completed"
+        }
+      }
+    },
+    {
+      "id": "4ac506de-7b94-424c-aa54-b1e2236404b5",
+      "sessionId": "1d0c650a-ffa3-4f19-9533-b9be39d6341e",
+      "seq": 8,
+      "at": "2026-10-09T07:27:54.876Z",
+      "type": "item.completed",
+      "data": {
+        "item": {
+          "id": "item_3",
+          "type": "agent_message",
+          "text": "Called `mcp__reef__reef_aquarium` exactly once. It succeeded."
+        }
+      }
+    },
+    {
+      "id": "776226d7-02b6-4165-a3f7-6c69a59d3f0d",
+      "sessionId": "1d0c650a-ffa3-4f19-9533-b9be39d6341e",
+      "seq": 9,
+      "at": "2026-10-09T07:27:55.162Z",
+      "type": "turn.completed",
+      "data": {
+        "usage": {
+          "input_tokens": 65022,
+          "cached_input_tokens": 42752,
+          "cache_write_input_tokens": 0,
+          "output_tokens": 156,
+          "reasoning_output_tokens": 0
+        }
+      }
+    }
+  ]
+}

@@ -770,7 +770,11 @@ export function App() {
                             <span>
                               {item.command ??
                                 item.text?.slice(0, 55) ??
-                                `${item.changes?.length ?? 0} ${item.type === "file_change" ? "reported file changes" : "observed item"}`}
+                                (item.type === "mcp_tool_call"
+                                  ? [item.server, item.tool]
+                                      .filter((value) => typeof value === "string")
+                                      .join(" · ") || "Tool activity"
+                                  : `${item.changes?.length ?? 0} ${item.type === "file_change" ? "reported file changes" : "observed item"}`)}
                             </span>
                           </span>
                           <span

@@ -50,6 +50,16 @@ Native Codex UI automation was denied by the Computer Use tool. The supported `o
 
 To finish actual-host QA, show the Reef chat, refresh/restart the desktop app if needed, confirm Reef is enabled under the Reef Development local source in Plugins, and open `public/garden-rescue.reef`. Confirm the custom aquarium renders rather than raw text. Open **Agent Aquarium** from the conversation panel’s plugin entrypoint, select a recorded run, and verify events refresh. Select one non-sensitive event and explicitly share it to verify context.
 
+Browser-host testing was also attempted through the supported custom MCP connection form. A private development tunnel was created with user approval, but no runtime API key was available, so its client was not started and no ChatGPT connection was completed. This limitation does not affect local Codex authentication or the verified local plugin invocation.
+
+## Sharing and publication
+
+The GitHub repository distributes source. For the current local development version, recipients need Node 22+, Codex, and a Codex login for live execution. They can clone the repository, run `npm ci`, `npm run build`, and `npm run plugin:build`, then register that local clone using the installation commands above. Keep `npm start` running for session access. Local runs and this plugin path do not require a separate OpenAI API key.
+
+A Git marketplace installation downloads files but does not build `plugin/dist`. Do not advertise a direct Git install as ready until the release includes the built server and HTML. A release ZIP must contain `plugin.json`, `mcp.json`, and `dist/server.mjs` plus `dist/app.html`, preserving their paths.
+
+Public directory publication is a separate process. The current stdio server and loopback session store are a local architecture, not a public hosted service. A directory release with remote MCP needs a stable public HTTPS endpoint, appropriate user authentication and data isolation, completed host testing, publisher verification, listing assets and privacy details, a ZIP submission, automated checks, review cases, a walkthrough, approval, and a final publish action. Private tunnels are for development and private use, not public directory distribution. See the [current submission guide](https://developers.openai.com/plugins/deploy/submission) and [remote MCP requirements](https://developers.openai.com/plugins/deploy/app-review).
+
 ## Sources
 
 - [OpenAI extension overview](https://developers.openai.com/plugins/build/extensions)

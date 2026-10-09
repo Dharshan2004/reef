@@ -36,15 +36,17 @@ codex plugin add reef@reef-local --json
 codex plugin list --marketplace reef-local --json
 ```
 
-The source path is `./plugin`, resolved from the marketplace root. Both portable `mcp.json` and compatibility `.mcp.json` are present. The server command is `node ./dist/server.mjs`, with the plugin root as cwd.
+The source path is `./plugin`, resolved from the marketplace root. Both portable `mcp.json` and compatibility `.mcp.json` are present. The server command is `node ./dist/server.mjs`, with `type: "stdio"` and `cwd: "./"`, resolving to the plugin root. These fields matter: a real Codex activation audit caught and corrected an omitted portable transport type and legacy `cwd: "."` syntax. The legacy `.mcp.json` retains its compatibility format.
 
-On 9 October 2026, the supported CLI returned successful installation at `~/.codex/plugins/cache/reef-local/reef/0.1.0`. Listing returned `installed: true` and `enabled: true`. The protocol suite also passed against that absolute installed server path, proving it runs independently of repo dependencies.
+On 9 October 2026, the supported CLI returned successful installation at `~/.codex/plugins/cache/reef-local/reef/0.1.0`. Listing returned `installed: true` and `enabled: true`. The protocol suite also passed against that absolute installed server path, proving it runs independently of repo dependencies. A fresh real `codex exec` turn subsequently invoked `mcp__reef__reef_aquarium` successfully: the JSONL contains a completed `mcp_tool_call` from server `reef`, with panel structured output. See `docs/plugin-activation-evidence.jsonl`. This verifies actual plugin MCP activation, beyond direct SDK-client testing.
 
 After changes, rebuild and run `codex plugin add reef@reef-local --json` to refresh the installed copy. Official documentation also recommends restarting the desktop app so it picks up changed local plugin files.
 
 ## Actual host verification status
 
-Native Codex UI automation was denied by the Computer Use tool. The supported `open_in_codex` file action returned `queued` because the calling chat was not visible. The MCP Apps surface was accessible, but listed no open tabs. Therefore actual Codex file-handler and conversation-panel rendering remains unverified. CLI installation and server protocol operation are verified; those facts do not establish that the running desktop session has loaded the extensions.
+Installed-plugin MCP invocation inside a real Codex turn is verified. To reproduce the explicit read-only activation check, run `node scripts/plugin-activation-test.mjs`. This starts one account-backed `gpt-6.1-sol` turn, allows tool discovery, and invokes only the aquarium tool. It is separate from normal unit/protocol tests and CI.
+
+Native Codex UI automation was denied by the Computer Use tool. The supported `open_in_codex` file action returned `queued` because the calling chat was not visible. The MCP Apps surface was accessible, but listed no open tabs. Therefore actual Codex file-handler and conversation-panel rendering remains unverified. CLI installation, installed-plugin invocation in a real Codex turn, and server protocol operation are verified; those facts do not establish that the running desktop session has loaded the extensions.
 
 To finish actual-host QA, show the Reef chat, refresh/restart the desktop app if needed, confirm Reef is enabled under the Reef Development local source in Plugins, and open `public/garden-rescue.reef`. Confirm the custom aquarium renders rather than raw text. Open **Agent Aquarium** from the conversation panel’s plugin entrypoint, select a recorded run, and verify events refresh. Select one non-sensitive event and explicitly share it to verify context.
 

@@ -29,8 +29,19 @@ The plugin was exercised through an independent browser harness using the offici
 
 Supported `codex plugin` commands registered `reef-local` and installed `reef@reef-local`; listing reported installed and enabled. The installed bundle successfully passed the protocol suite.
 
+A subsequent real activation test caught two defects that the direct protocol test missed: portable `mcp.json` required `type: "stdio"` and `cwd: "./"`. Both are corrected and covered by manifest assertions. A fresh read-only `gpt-6.1-sol` Codex turn then discovered the installed plugin and called `reef_aquarium` once. Its actual JSONL includes MCP start/completion events and the successful panel result. [Sanitized evidence](plugin-activation-evidence.jsonl) and `node scripts/plugin-activation-test.mjs` preserve the result and reproduction. No global approval policy changes were needed.
+
 Actual desktop file-viewer and conversation-panel rendering remains **unverified**. Native Codex automation was denied; the supported file-open tool queued the panel because the chat was hidden, and the MCP Apps surface had no open tabs. A working independent bridge harness does not prove host rendering. See [plugin.md](plugin.md) for the exact action needed to complete host QA. Public plugin-directory submission and npm publication were not performed.
 
 ## Limits
+
+| Activity or surface | Verification |
+| --- | --- |
+| Commands, failures, file changes, messages, completion, usage | Real Reef-launched coding runs, including browser observation and durable replay |
+| Installed plugin discovery and MCP invocation | Fresh real Codex CLI turn; successful `reef_aquarium` start/completion |
+| Import, rewind, privacy-default export | Standalone browser exercised with the real recording |
+| Plugin file input, session selection, selected context | Official AppBridge harness; actual host UI still unverified |
+| Cancellation, restart, SSE reconnection | Automated integration tests; no additional account-backed run claimed |
+| Arbitrary existing chats, hidden reasoning, every external tool | Not observed or claimed |
 
 One active session at a time; no discovery of arbitrary existing Codex chats. Aquarium animation is decorative. Usage and file activity depend on the events Codex reports. The viewer is not an editor. Actual account/model availability and desktop host support must be checked again before the meetup.

@@ -1,4 +1,16 @@
 import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+const manifest = JSON.parse(await readFile("plugin/mcp.json", "utf8"));
+assert.equal(
+  manifest.mcpServers.reef.type,
+  "stdio",
+  "Portable MCP servers require an explicit transport type",
+);
+assert.equal(
+  manifest.mcpServers.reef.cwd,
+  "./",
+  "Portable stdio cwd must use a contained path",
+);
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 const client = new Client({ name: "reef-plugin-test", version: "1.0.0" });

@@ -1,0 +1,7 @@
+{"type":"thread.started","thread_id":"01a11f8a-df55-7e20-b320-7bf2b5d8faac"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"I’ll check for the Reef tool and call `reef_aquarium` once if it’s available.\n"}}
+{"type":"item.started","item":{"id":"item_1","type":"mcp_tool_call","server":"reef","tool":"reef_aquarium","arguments":{},"result":null,"error":null,"status":"in_progress"}}
+{"type":"item.completed","item":{"id":"item_1","type":"mcp_tool_call","server":"reef","tool":"reef_aquarium","arguments":{},"result":{"content":[{"type":"text","text":"Reef shows recorded Codex activity. Choose a session or open a .reef recording."}],"structured_content":{"view":"panel"}},"error":null,"status":"completed"}}
+{"type":"item.completed","item":{"id":"item_2","type":"agent_message","text":"Called `mcp__reef__reef_aquarium` exactly once. It succeeded."}}
+{"type":"turn.completed","usage":{"input_tokens":41336,"cached_input_tokens":20352,"cache_write_input_tokens":0,"output_tokens":128,"reasoning_output_tokens":0}}

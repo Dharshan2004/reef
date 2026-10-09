@@ -1,6 +1,11 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
   "mcpServers": {
-    "reef": { "command": "node", "args": ["./dist/server.mjs"], "cwd": "." }
+    "reef": {
+      "command": "node",
+      "args": ["./dist/server.mjs"],
+      "cwd": "./",
+      "type": "stdio"
+    }
   }
 }

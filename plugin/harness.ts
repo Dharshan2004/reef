@@ -5,6 +5,7 @@ import {
 } from "@modelcontextprotocol/ext-apps/app-bridge";
 const iframe = document.querySelector("iframe")!;
 const status = document.querySelector("#status")!;
+const { live } = await (await fetch("/mode")).json();
 const recording = await (await fetch("/recording")).text();
 const appHtml = await (await fetch("/app")).text();
 const bridge = new AppBridge(
@@ -33,11 +34,18 @@ bridge.onreadresource = async ({ uri }) => ({
   contents: [{ uri, text: recording, mimeType: "application/json" }],
 });
 bridge.onupdatemodelcontext = async (params) => {
-  status.textContent = "Context shared: " + JSON.stringify(params);
+  status.textContent =
+    "Local preview only: event received here, not shared with a Codex conversation.";
   return {};
 };
 bridge.oninitialized = () => {
-  status.textContent = "MCP App initialized; file input delivered";
+  status.textContent = live
+    ? "Local observations · refreshes every 4s · only sessions emitting trusted Reef hooks appear"
+    : "Saved sample preview · not observing live activity";
+  if (live) {
+    void bridge.sendToolInput({ arguments: {} });
+    return;
+  }
   void bridge.sendToolInput({
     arguments: {
       file: {

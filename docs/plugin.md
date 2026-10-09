@@ -23,10 +23,16 @@ npx tsc --project plugin/tsconfig.json
 For independent MCP App browser validation:
 
 ```sh
+# Connect the browser preview to the installed Reef observation store
+node scripts/plugin-harness.mjs --live
+
+# Saved-recording protocol test only
 node scripts/plugin-harness.mjs
 ```
 
-Open `http://127.0.0.1:4320`. This local harness uses the official `AppBridge`, delivers a file entrypoint with `public/garden-rescue.reef`, and displays a context-sharing result. Harness rendering is not proof of ChatGPT host rendering. Browser QA on 9 October verified host file input/read, real-recording replay, completed state with seven items and one command failure, explicit context-sharing receipt, backward-scrub selection clearing, and local session selection through the app-only tool bridge.
+Open `http://127.0.0.1:4320`. The `--live` mode starts in the session picker and reads the installed Reef MCP transport on every refresh. It never substitutes saved fixtures. Only sessions emitting trusted hooks appear; it does not attach hooks to an already-running desktop chat. Restart Codex and start a fresh session after installation. The banner distinguishes live local observations from the saved-sample mode. This is a local browser preview, not the native Codex panel; context-sharing receipts stay in the preview.
+
+Without `--live`, this local harness uses the official `AppBridge`, delivers a file entrypoint with `public/garden-rescue.reef`, and displays a context-sharing result. Harness rendering is not proof of ChatGPT host rendering. Browser QA on 9 October verified host file input/read, real-recording replay, completed state with seven items and one command failure, explicit context-sharing receipt, backward-scrub selection clearing, and local session selection through the app-only tool bridge.
 
 ## Local installation
 

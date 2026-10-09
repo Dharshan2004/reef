@@ -263,7 +263,10 @@ function Viewer() {
   }
   const primarySession = recording ?? sessions[0];
   const creatureName = (r?: Recording) =>
-    r?.session.creatureName ?? r?.session.title.slice(0, 20) ?? "Miso";
+    r?.session.creatureName ??
+    (r && isNativeRecording(r)
+      ? `Codex · ${r.session.id.slice(-6)}`
+      : (r?.session.title.slice(0, 20) ?? "Miso"));
   const moodFor = (r: Recording): CreatureMood => {
     const status = recordingStatus(r);
     return status === "failed"

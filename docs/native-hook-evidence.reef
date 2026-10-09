@@ -1,0 +1,94 @@
+{
+  "format": "reef",
+  "version": 1,
+  "session": {
+    "id": "native-01a11fc2-f535-7651-9eb2-93bb07696c95",
+    "title": "Observed Codex chat · 696c95",
+    "prompt": "[not observed]",
+    "workingDirectory": "[not observed]",
+    "model": "gpt-6.1-sol",
+    "createdAt": "2026-10-09T08:23:57.890Z",
+    "source": "native",
+    "observation": {
+      "adapter": "codex-hooks",
+      "coverage": "structural",
+      "limitations": [
+        "No prompts, commands, inputs, outputs, file paths, usage, or transcripts collected.",
+        "A returned tool and stopped generation do not establish task success.",
+        "Only enabled hook activity is observed; older events may be pruned."
+      ]
+    }
+  },
+  "events": [
+    {
+      "id": "47fdb398-e559-4fd4-97c7-6e5c32c53409",
+      "sessionId": "native-01a11fc2-f535-7651-9eb2-93bb07696c95",
+      "seq": 1,
+      "at": "2026-10-09T08:23:57.890Z",
+      "type": "native.session_started",
+      "data": {}
+    },
+    {
+      "id": "63c28e2c-5506-4f88-bd89-0560e1e23537",
+      "sessionId": "native-01a11fc2-f535-7651-9eb2-93bb07696c95",
+      "seq": 2,
+      "at": "2026-10-09T08:23:57.948Z",
+      "type": "native.turn_started",
+      "data": {
+        "turnId": "01a11fc2-fa3c-7653-b1e1-a96702e4f117"
+      }
+    },
+    {
+      "id": "4546ca8a-1058-4931-b796-c7bf8b924c25",
+      "sessionId": "native-01a11fc2-f535-7651-9eb2-93bb07696c95",
+      "seq": 3,
+      "at": "2026-10-09T08:24:02.797Z",
+      "type": "native.tool_started",
+      "data": {
+        "turnId": "01a11fc2-fa3c-7653-b1e1-a96702e4f117",
+        "item": {
+          "id": "native-tool-exec-2609f69c-6846-45db-af65-f836c9a1e511",
+          "type": "command_execution",
+          "toolName": "Bash",
+          "origin": "native-hook",
+          "status": "in_progress"
+        }
+      }
+    },
+    {
+      "id": "1c5d2ffe-5414-4fc7-9570-91d81cc87f2f",
+      "sessionId": "native-01a11fc2-f535-7651-9eb2-93bb07696c95",
+      "seq": 4,
+      "at": "2026-10-09T08:24:02.898Z",
+      "type": "native.tool_finished",
+      "data": {
+        "turnId": "01a11fc2-fa3c-7653-b1e1-a96702e4f117",
+        "item": {
+          "id": "native-tool-exec-2609f69c-6846-45db-af65-f836c9a1e511",
+          "type": "command_execution",
+          "toolName": "Bash",
+          "origin": "native-hook",
+          "status": "observed_finished"
+        }
+      }
+    },
+    {
+      "id": "bd9996cd-4127-4c6c-96cc-1f061611b46f",
+      "sessionId": "native-01a11fc2-f535-7651-9eb2-93bb07696c95",
+      "seq": 5,
+      "at": "2026-10-09T08:24:06.865Z",
+      "type": "native.stopped",
+      "data": {
+        "turnId": "01a11fc2-fa3c-7653-b1e1-a96702e4f117"
+      }
+    },
+    {
+      "id": "f3c58384-0b3f-4e62-8f16-87918889abb3",
+      "sessionId": "native-01a11fc2-f535-7651-9eb2-93bb07696c95",
+      "seq": 6,
+      "at": "2026-10-09T08:24:06.933Z",
+      "type": "native.ended",
+      "data": {}
+    }
+  ]
+}

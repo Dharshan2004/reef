@@ -1,0 +1,18 @@
+{
+  "name": "reef",
+  "version": "0.1.0",
+  "description": "A pixel aquarium for native local Codex observation and .reef replay.",
+  "license": "MIT",
+  "hooks": "./hooks/hooks.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Reef",
+    "shortDescription": "Observe local Codex activity and replay recordings",
+    "longDescription": "Observe structural activity from native local Codex sessions after reviewing and trusting Reef hooks. Select an observed session beside your conversation, open .reef recordings, and deliberately share selected event context. Hooks write local metadata; MCP tools are read-only.",
+    "category": "Developer Tools",
+    "capabilities": ["Read"],
+    "defaultPrompt": [
+      "Open the Reef aquarium to inspect my recorded Codex sessions."
+    ]
+  }
+}

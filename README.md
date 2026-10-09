@@ -48,9 +48,9 @@ Reef automatically saves raw sessions under `.reef-data/` (ignored by Git). Paus
 
 Use **Export** to select fields and inspect the JSON before downloading. Prompt, commands, paths, and content are independently selectable. Text and tool output may themselves contain sensitive information, so review the preview. Do not commit private recordings.
 
-## ChatGPT plugin
+## Local Codex plugin and ChatGPT extensions
 
-The plugin adds a `.reef` custom file viewer and a conversation aquarium panel using the current ChatGPT plugin extensions APIs. It uses the same event reducer and procedural aquarium. See [plugin installation and verified status](docs/plugin.md).
+The plugin adds a `.reef` custom file viewer and a conversation aquarium panel using the current ChatGPT plugin extensions APIs. Its bundled Codex hooks also collect local activity metadata from sessions where Reef is enabled and its hooks have been reviewed. This native observation path needs no standalone server or API key. It uses the same event reducer and procedural aquarium. See [plugin installation and verified status](docs/plugin.md).
 
 ```sh
 npm run plugin:build
@@ -63,12 +63,12 @@ The DevDay 2026 connection is **plugin extensions**. The Codex TypeScript SDK is
 
 The defaults work without configuration. Set environment variables in the shell when needed:
 
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `REEF_PORT` | `4318` | Local API and production web port. The plugin expects the default port. |
-| `REEF_DATA_DIR` | `.reef-data` | Private local recording storage. |
-| `REEF_CODEX_PATH` | SDK-bundled CLI | Optional compatible local Codex executable. |
-| `REEF_INHERIT_TOOLS` | unset | Set to `1` only to deliberately inherit your configured tools. |
+| Variable             | Default         | Purpose                                                                 |
+| -------------------- | --------------- | ----------------------------------------------------------------------- |
+| `REEF_PORT`          | `4318`          | Local API and production web port. The plugin expects the default port. |
+| `REEF_DATA_DIR`      | `.reef-data`    | Private local recording storage.                                        |
+| `REEF_CODEX_PATH`    | SDK-bundled CLI | Optional compatible local Codex executable.                             |
+| `REEF_INHERIT_TOOLS` | unset           | Set to `1` only to deliberately inherit your configured tools.          |
 
 Reef disables inherited plugins, apps, and configured MCP servers for a bounded local coding run by default. It keeps existing Codex authentication; credentials are not copied into Reef. User instructions and other Codex configuration may still apply. If integration discovery fails, launch stops with an explanatory error.
 
@@ -83,6 +83,8 @@ npm run plugin:test
 
 Read [architecture](docs/architecture.md), [event format](docs/event-format.md), and [contribution guidance](CONTRIBUTING.md).
 
-v0 observes sessions Reef launches. It does not discover arbitrary chats, infer hidden reasoning, provide cloud orchestration, or edit code through the UI. Authentication stays on the local Codex side. The server binds to loopback, validates Host/Origin, and runs Codex with workspace-write permissions and network disabled.
+Reef records detailed sessions it launches, and the local plugin can observe structural lifecycle events in Codex sessions with trusted Reef hooks. It does not backfill arbitrary chat history, infer hidden reasoning, provide cloud orchestration, or edit code through the UI. Authentication stays on the local Codex side. The server binds to loopback, validates Host/Origin, and runs Codex with workspace-write permissions and network disabled.
+
+The local observation design was informed by a [REA and source audit of Pixel Agents](docs/pixel-agents-audit.md). Reef retains its own implementation and artwork.
 
 MIT licensed, including all original procedural pixel artwork. Built with TypeScript, React, Canvas 2D, Node, and the Codex SDK.

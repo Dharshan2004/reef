@@ -2,6 +2,11 @@ import { useEffect, useRef } from "react";
 
 export type CreatureMood =
   "idle" | "thinking" | "working" | "waiting" | "complete" | "error";
+export interface AquariumCompanion {
+  id: string;
+  name: string;
+  mood?: CreatureMood;
+}
 export interface AquariumProps {
   name?: string;
   mood?: CreatureMood;
@@ -9,6 +14,8 @@ export interface AquariumProps {
   selected?: boolean;
   presentation?: boolean;
   onSelect?: () => void;
+  companions?: AquariumCompanion[];
+  onSelectCompanion?: (id: string) => void;
 }
 
 // Original, procedural pixel art. Visual motion is ambient, never task progress.
@@ -19,10 +26,12 @@ export function Aquarium({
   selected = true,
   presentation = false,
   onSelect,
+  companions = [],
+  onSelectCompanion,
 }: AquariumProps) {
   const canvas = useRef<HTMLCanvasElement>(null);
-  const settings = useRef({ name, mood, station, selected });
-  settings.current = { name, mood, station, selected };
+  const settings = useRef({ name, mood, station, selected, companions });
+  settings.current = { name, mood, station, selected, companions };
   useEffect(() => {
     const el = canvas.current!;
     const ctx = el.getContext("2d")!;
@@ -170,56 +179,111 @@ export function Aquarium({
       const targetX = s.station ? positions[s.station] : w * 0.48;
       const x = targetX + Math.sin(t * 0.5) * (s.station ? 7 : 24);
       const y = (s.station ? floor - 55 : h * 0.45) + Math.sin(t * 1.1) * 5;
-      if (s.selected) {
-        ctx.strokeStyle = "rgba(103,222,211,.18)";
-        ctx.beginPath();
-        ctx.ellipse(x, y + 4, 33, 29, 0, 0, Math.PI * 2);
-        ctx.stroke();
-      }
-      const body =
-        s.mood === "error"
-          ? "#ef968e"
-          : s.mood === "complete"
-            ? "#a7e0bd"
-            : "#8de1d2";
-      // Miso: a tiny axolotl with branching coral gills and a tapered tail.
-      rect(x - 20, y - 5, 8, 3, "#cc817e");
-      rect(x - 23, y - 10, 4, 5, "#efaba0");
-      rect(x - 22, y + 1, 7, 3, "#efaba0");
-      rect(x + 13, y - 5, 9, 3, "#cc817e");
-      rect(x + 20, y - 10, 4, 5, "#efaba0");
-      rect(x + 17, y + 1, 7, 3, "#efaba0");
-      rect(x - 14, y - 9, 28, 18, body);
-      rect(x - 10, y - 13, 20, 5, body);
-      rect(x - 10, y + 8, 21, 7, "#65b9b0");
-      rect(x + 10, y + 10, 12, 4, "#65b9b0");
-      rect(x + 20, y + 7 + Math.sin(t * 3) * 2, 6, 4, "#81cec2");
-      rect(x - 8, y - 3, 3, 4, "#0a3241");
-      rect(x + 6, y - 3, 3, 4, "#0a3241");
-      rect(x - 1, y + 4, 4, 1, "#31676b");
-      rect(x - 11, y + 2, 4, 2, "#d99d96");
-      rect(x + 9, y + 2, 4, 2, "#d99d96");
-      ctx.font = "7px ui-monospace, monospace";
-      ctx.textAlign = "center";
-      ctx.fillStyle = "#b1d4d7";
-      ctx.fillText(s.name, x, y + 28);
+      const drawCreature = (
+        x: number,
+        y: number,
+        creatureName: string,
+        creatureMood: CreatureMood,
+        highlight: boolean,
+      ) => {
+        if (highlight) {
+          ctx.strokeStyle = "rgba(103,222,211,.18)";
+          ctx.beginPath();
+          ctx.ellipse(x, y + 4, 33, 29, 0, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        const body =
+          creatureMood === "error"
+            ? "#ef968e"
+            : creatureMood === "complete"
+              ? "#a7e0bd"
+              : "#8de1d2";
+        // Miso: a tiny axolotl with branching coral gills and a tapered tail.
+        rect(x - 20, y - 5, 8, 3, "#cc817e");
+        rect(x - 23, y - 10, 4, 5, "#efaba0");
+        rect(x - 22, y + 1, 7, 3, "#efaba0");
+        rect(x + 13, y - 5, 9, 3, "#cc817e");
+        rect(x + 20, y - 10, 4, 5, "#efaba0");
+        rect(x + 17, y + 1, 7, 3, "#efaba0");
+        rect(x - 14, y - 9, 28, 18, body);
+        rect(x - 10, y - 13, 20, 5, body);
+        rect(x - 10, y + 8, 21, 7, "#65b9b0");
+        rect(x + 10, y + 10, 12, 4, "#65b9b0");
+        rect(x + 20, y + 7 + Math.sin(t * 3) * 2, 6, 4, "#81cec2");
+        rect(x - 8, y - 3, 3, 4, "#0a3241");
+        rect(x + 6, y - 3, 3, 4, "#0a3241");
+        rect(x - 1, y + 4, 4, 1, "#31676b");
+        rect(x - 11, y + 2, 4, 2, "#d99d96");
+        rect(x + 9, y + 2, 4, 2, "#d99d96");
+        ctx.font = "7px ui-monospace, monospace";
+        ctx.textAlign = "center";
+        ctx.fillStyle = "#b1d4d7";
+        ctx.fillText(creatureName.slice(0, 19), x, y + 28);
+      };
+      drawCreature(x, y, s.name, s.mood, s.selected);
+      s.companions.slice(0, 3).forEach((creature, index) => {
+        drawCreature(
+          w * (0.2 + index * 0.3) + Math.sin(t * 0.5 + index) * 5,
+          h * 0.22 + Math.sin(t + index) * 3,
+          creature.name,
+          creature.mood ?? "idle",
+          false,
+        );
+      });
       frame = requestAnimationFrame(draw);
     };
-    frame = requestAnimationFrame(draw);
+    draw();
     return () => {
       active = false;
       cancelAnimationFrame(frame);
     };
   }, []);
-  return (
-    <button
-      type="button"
-      className={`aquarium-canvas ${presentation ? "is-presentation" : ""}`}
-      onClick={onSelect}
-      aria-label={`Inspect ${name}, ${mood}`}
-    >
+  const content = (
+    <>
       <canvas ref={canvas} />
-      <span className="aquarium-hint">Click {name} to inspect activity</span>
-    </button>
+      <span className="aquarium-hint">Click a creature to inspect</span>
+    </>
+  );
+  // Keep this wrapper and canvas mounted when sessions arrive asynchronously.
+  // Switching the wrapper element would leave the animation drawing a detached canvas.
+  return (
+    <div className={`aquarium-canvas ${presentation ? "is-presentation" : ""}`}>
+      {content}
+      <button
+        type="button"
+        className="aquarium-primary-hit"
+        aria-label={`Inspect ${name}, ${mood}`}
+        onClick={onSelect}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          border: 0,
+          background: "transparent",
+          outlineOffset: -4,
+        }}
+      />
+      {companions.slice(0, 3).map((creature, index) => (
+        <button
+          key={creature.id}
+          type="button"
+          className="aquarium-companion-hit"
+          style={{
+            position: "absolute",
+            left: `${20 + index * 30}%`,
+            top: "22%",
+            width: 100,
+            height: 90,
+            transform: "translate(-50%, -35%)",
+            background: "transparent",
+            border: 0,
+            padding: 0,
+          }}
+          aria-label={`Inspect ${creature.name}, ${creature.mood ?? "idle"}`}
+          onClick={() => onSelectCompanion?.(creature.id)}
+        />
+      ))}
+    </div>
   );
 }

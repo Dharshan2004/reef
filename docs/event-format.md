@@ -28,24 +28,32 @@ A `.reef` file is UTF-8 JSON. It contains inert data, never executable instructi
 }
 ```
 
-`seq` is a strictly increasing positive integer, scoped to the session. `at` is the time Reef observed the event, not a claim about when an internal model action began. `model` records the requested model. `source` is provenance (`live`, `demo`, or `import`), distinct from the current UI mode. A live-origin file is still REPLAY when opened from disk.
+`seq` is a strictly increasing positive integer, scoped to the session. `at` is the time Reef observed the event, not a claim about when an internal model action began. `model` records the requested model. `source` is provenance (`live`, `native`, `demo`, or `import`), distinct from the current UI mode. A live-origin file is still REPLAY when opened from disk.
 
 ## Event mapping
 
 SDK event names are preserved. The SDK event's `type` moves to the envelope; remaining fields go in `data`.
 
-| Event | Meaning |
-| --- | --- |
-| `session.started` | Reef accepted and began launching the task. |
-| `thread.started` | SDK reported a thread identifier. |
-| `turn.started` | SDK reported an active turn. |
-| `item.started`, `item.updated`, `item.completed` | Snapshot of an observed item in `data.item`. |
-| `turn.completed` | Turn completed; `data.usage` may contain reported token counts. |
-| `turn.failed`, `error`, `session.error` | SDK or adapter reported a terminal failure. |
-| `session.cancelled` | User requested cancellation; existing edits are not rolled back. |
-| `session.disconnected` | Stream ended without a terminal outcome, or a previous process stopped. Outcome is unknown. |
+| Event                                            | Meaning                                                                                     |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------- |
+| `session.started`                                | Reef accepted and began launching the task.                                                 |
+| `thread.started`                                 | SDK reported a thread identifier.                                                           |
+| `turn.started`                                   | SDK reported an active turn.                                                                |
+| `item.started`, `item.updated`, `item.completed` | Snapshot of an observed item in `data.item`.                                                |
+| `turn.completed`                                 | Turn completed; `data.usage` may contain reported token counts.                             |
+| `turn.failed`, `error`, `session.error`          | SDK or adapter reported a terminal failure.                                                 |
+| `session.cancelled`                              | User requested cancellation; existing edits are not rolled back.                            |
+| `session.disconnected`                           | Stream ended without a terminal outcome, or a previous process stopped. Outcome is unknown. |
 
 Item IDs join successive snapshots. Commands use `command_execution` with command, aggregated output, exit code, and observed status. File changes use `file_change` with paths, kind, and reported status. MCP calls and other SDK items remain available as observed. An item of type `error` is an item-level diagnostic and does not by itself fail the whole task.
+
+## Native hook events
+
+Native recordings have `session.source: "native"` and structural observation metadata. They do not carry prompt, working directory, command, output, transcript, or usage. Tool IDs join explicit Pre/PostToolUse observations. `observed_finished` means returned, with outcome unknown. Lifecycle states include `waiting`, `stopped`, `interrupted`, and `ended`; a native Stop is not a successful task-completion event.
+
+Events are `native.session_started`, `native.turn_started`, `native.tool_started`, `native.tool_finished`, `native.permission_requested`, `native.agent_started`, `native.agent_finished`, `native.stopped`, `native.interrupted`, and `native.ended`. Native event data preserves `turnId` for lifecycle correlation and an allowlisted item when applicable. Terminal tool observations do not regress when starts arrive late. A new session start permits an ended chat to resume.
+
+Native history is bounded. Pruned event sequences retain their original numbers; replay may start above 1 and lacks the discarded history. Event timestamps remain observation times, not proof of internal execution timing.
 
 ## Replay rules
 

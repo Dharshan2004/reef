@@ -1,0 +1,19 @@
+{
+  "sessionId": "01a11fc2-f535-7651-9eb2-93bb07696c95",
+  "toolCalls": 1,
+  "commandReturned": true,
+  "hookReviewWarning": false,
+  "observationVerified": true,
+  "eventTypes": [
+    "native.session_started",
+    "native.turn_started",
+    "native.tool_started",
+    "native.tool_finished",
+    "native.stopped",
+    "native.ended"
+  ],
+  "state": "ended",
+  "toolStatus": "observed_finished",
+  "commandContentOmitted": true,
+  "usageUnknown": true
+}

@@ -27,7 +27,12 @@ export type Recording = {
     workingDirectory: string;
     model: string;
     createdAt: string;
-    source: "live" | "demo" | "import";
+    source: "live" | "demo" | "import" | "native";
+    observation?: {
+      adapter: "codex-hooks";
+      coverage: "structural";
+      limitations: string[];
+    };
     creatureName?: string;
   };
   events: ReefEvent[];
@@ -40,7 +45,16 @@ export type Usage = {
 };
 export type SessionState = {
   status:
-    "starting" | "running" | "completed" | "failed" | "cancelled" | "unknown";
+    | "starting"
+    | "running"
+    | "completed"
+    | "failed"
+    | "cancelled"
+    | "unknown"
+    | "stopped"
+    | "interrupted"
+    | "ended"
+    | "waiting";
   items: ReefItem[];
   usage: Usage | null;
   reportedFiles: { path: string; kind: string; status: string }[];

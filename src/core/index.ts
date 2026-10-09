@@ -22,10 +22,76 @@ export function deriveSession(
     error: null,
   };
   const items = new Map<string, ReefItem>();
+  const nativeTerminalTurns = new Set<string>();
+  const nativeWaitingTools = new Set<string>();
   for (const event of recording.events) {
     if (event.seq > throughSeq) break;
     state.lastEventAt = event.at;
     switch (event.type) {
+      case "native.session_started":
+        if (state.status === "unknown" || state.status === "ended") {
+          state.status = "starting";
+          nativeTerminalTurns.clear();
+          nativeWaitingTools.clear();
+        }
+        break;
+      case "native.turn_started":
+        if (
+          state.status !== "ended" &&
+          !nativeTerminalTurns.has(String(event.data.turnId ?? ""))
+        )
+          state.status = "running";
+        break;
+      case "native.tool_started":
+      case "native.tool_finished":
+      case "native.permission_requested":
+      case "native.agent_started":
+      case "native.agent_finished": {
+        const item = event.data.item as ReefItem | undefined;
+        const previouslyFinished = item?.id
+          ? items.get(item.id)?.status === "observed_finished"
+          : false;
+        if (item?.id && event.type === "native.tool_finished")
+          nativeWaitingTools.delete(item.id);
+        if (item?.id) {
+          const previous = items.get(item.id);
+          if (
+            previous?.status !== "observed_finished" ||
+            item.status === "observed_finished"
+          )
+            items.set(item.id, structuredClone(item));
+        }
+        if (
+          !["ended", "stopped", "interrupted"].includes(state.status) &&
+          (!previouslyFinished ||
+            event.type === "native.tool_finished" ||
+            event.type === "native.agent_finished") &&
+          !nativeTerminalTurns.has(String(event.data.turnId ?? ""))
+        ) {
+          if (event.type === "native.permission_requested") {
+            if (item?.id) nativeWaitingTools.add(item.id);
+            state.status = "waiting";
+          } else if (event.type === "native.tool_started")
+            state.status = "running";
+          else if (
+            event.type === "native.tool_finished" &&
+            state.status === "waiting" &&
+            nativeWaitingTools.size === 0
+          )
+            state.status = "running";
+        }
+        break;
+      }
+      case "native.stopped":
+      case "native.interrupted":
+        nativeTerminalTurns.add(String(event.data.turnId ?? ""));
+        if (state.status !== "ended")
+          state.status =
+            event.type === "native.stopped" ? "stopped" : "interrupted";
+        break;
+      case "native.ended":
+        state.status = "ended";
+        break;
       case "session.started":
         state.status = "starting";
         break;
@@ -113,10 +179,20 @@ export function exportRecording(
   if (!options.includeContent) delete copy.session.creatureName;
   copy.events = copy.events.map((event) => {
     const data: Record<string, unknown> = {};
+    if (
+      event.type.startsWith("native.") &&
+      typeof event.data.turnId === "string"
+    )
+      data.turnId = event.data.turnId;
     const source = event.data.item as ReefItem | undefined;
     if (source) {
       const item: ReefItem = { id: source.id, type: source.type };
       if (typeof source.status === "string") item.status = source.status;
+      if (source.origin === "native-hook") {
+        item.origin = "native-hook";
+        for (const key of ["toolName", "agentType"])
+          if (typeof source[key] === "string") item[key] = source[key];
+      }
       if (typeof source.exit_code === "number")
         item.exit_code = source.exit_code;
       if (source.changes)
@@ -172,7 +248,34 @@ export function exportRecording(
       data,
     };
   });
-  return copy;
+  return {
+    format: "reef",
+    version: 1,
+    session: {
+      id: copy.session.id,
+      title: copy.session.title,
+      prompt: copy.session.prompt,
+      workingDirectory: copy.session.workingDirectory,
+      model: copy.session.model,
+      createdAt: copy.session.createdAt,
+      source: copy.session.source,
+      ...(options.includeContent && copy.session.creatureName
+        ? { creatureName: copy.session.creatureName }
+        : {}),
+      ...(copy.session.source === "native"
+        ? {
+            observation: {
+              adapter: "codex-hooks" as const,
+              coverage: "structural" as const,
+              limitations: [
+                "Structural hook observation only. Stopped generation and returned tools do not establish task success.",
+              ],
+            },
+          }
+        : {}),
+    },
+    events: copy.events,
+  };
 }
 export function parseRecording(text: string): Recording {
   if (text.length > 20_000_000) throw new Error("Recording exceeds 20 MB");

@@ -23,7 +23,11 @@ const server = createServer(async (req, res) => {
       res.end(await readFile("plugin/dist/app.html"));
     } else if (req.url === "/sessions") {
       res.setHeader("Content-Type", "application/json");
-      res.end(await (await fetch("http://127.0.0.1:4318/api/sessions")).text());
+      res.end(
+        process.env.REEF_HARNESS_SESSIONS
+          ? await readFile(process.env.REEF_HARNESS_SESSIONS)
+          : await (await fetch("http://127.0.0.1:4318/api/sessions")).text(),
+      );
     } else if (req.url === "/recording") {
       res.setHeader("Content-Type", "application/json");
       res.end(await readFile("public/garden-rescue.reef"));

@@ -1,6 +1,6 @@
 # Architecture
 
-Reef watches sessions it launches. It does not discover other chats, infer hidden agent reasoning, or coordinate independent agents.
+Reef records detailed sessions it launches and observes structural lifecycle events in native Codex sessions with trusted Reef hooks. It does not backfill other chat histories, infer hidden reasoning, or coordinate independent agents.
 
 ```text
 Local Codex login
@@ -31,6 +31,10 @@ Codex TypeScript SDK → server/session-manager.ts → .reef-data/*.json
 Every SDK event receives a session ID, monotonic sequence number, unique event ID, and observation timestamp. The server appends it before notifying subscribers. The browser's source can be a live stream or a recording, but both use the same pure reducer. Backward scrubbing reconstructs state from the beginning through the selected event, so completed items and later file changes cannot leak backward in time.
 
 Command failure is an item outcome. A task can contain failed commands and still finish successfully. File changes reflect SDK reports, including their outcome, rather than interpolated editing progress. Missing token usage remains unknown. A dropped browser connection is a transport condition, not proof of agent failure.
+
+## Native observation
+
+`plugin/observe.ts` reads one hook payload, projects an allowlist through `plugin/native.ts`, writes a private atomic event under `PLUGIN_DATA/reef-native`, and returns `{}`. It makes no agent policy decision. A per-session lock allocates persistent increasing sequences. The reader reconstructs the same Reef envelope with source `native`; the shared reducer understands native lifecycle states without converting a returned tool or a Stop hook into task success. Retention keeps 500 events per session and 50 sessions, with stable cursors. Native MCP reads need no HTTP recorder. The generated `plugin/codex` legacy package works around Codex 0.161 skipping hooks in portable packages; the portable extension package is preserved.
 
 ## Local execution and privacy
 
